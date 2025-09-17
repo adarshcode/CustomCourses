@@ -1,97 +1,148 @@
 # Glossary
 
-## Technical Terms Used Throughout the Course
+## Object-Oriented Programming Terms
 
-**Abstract Class** - A class that cannot be instantiated directly and typically contains one or more abstract methods that must be implemented by subclasses.
+**Abstraction**
+- Hiding implementation details while exposing only essential features
+- Allows users to interact with objects without knowing how they work internally
+- Example: Using a car without knowing how the engine works
 
-**Abstraction** - The principle of hiding complex implementation details while exposing only the necessary interface to the user.
+**Class**
+- A blueprint or template for creating objects
+- Defines what properties and methods objects of that type will have
+- Example: A "Car" class defines that all cars have properties like color and methods like start()
 
-**Aggregation** - A "has-a" relationship where one object contains references to other objects, but the contained objects can exist independently.
+**Encapsulation**
+- Bundling data (attributes) and methods that operate on that data within a single unit
+- Restricting direct access to some of an object's components
+- Example: Making bank account balance private and only allowing access through specific methods
 
-**Class** - A blueprint or template that defines the structure and behavior of objects, including their properties and methods.
+**Inheritance**
+- Mechanism allowing a new class to acquire properties and methods of an existing class
+- Promotes code reuse and establishes relationships between classes
+- Example: A "Dog" class inheriting from an "Animal" class
 
-**Cohesion** - The degree to which elements within a single class or module work together toward a single, well-defined purpose.
+**Method**
+- A function that belongs to a class and defines behavior of objects
+- Can perform actions and return values
+- Example: A "bark()" method in a Dog class
 
-**Composition** - A strong "has-a" relationship where one object owns other objects and the contained objects cannot exist without the container.
+**Object**
+- An instance of a class
+- Contains actual data and can perform actions defined by its class
+- Example: "myDog" is an object created from the Dog class
 
-**Constructor** - A special method that is called when an object is created, typically used to initialize the object's state.
+**Polymorphism**
+- Ability to treat objects of different types uniformly through a common interface
+- Same method name can behave differently based on the object calling it
+- Example: Different animals implementing "makeSound()" differently
 
-**Coupling** - The degree of interdependence between different classes or modules; lower coupling is generally better.
+**Property/Attribute**
+- Data stored within an object
+- Represents the state or characteristics of an object
+- Example: A car's color, speed, or fuel level
 
-**Dependency Injection** - A technique where dependencies are provided to an object rather than the object creating them itself.
+## SOLID Principles
 
-**Dependency Inversion Principle (DIP)** - High-level modules should not depend on low-level modules; both should depend on abstractions.
+**Single Responsibility Principle (SRP)**
+- A class should have only one reason to change
+- Each class should have only one job or responsibility
+- Promotes focused, cohesive classes
 
-**DRY (Don't Repeat Yourself)** - A principle that aims to reduce repetition of software patterns by extracting common functionality.
+**Open-Closed Principle (OCP)**
+- Software entities should be open for extension but closed for modification
+- You should be able to add new functionality without changing existing code
+- Achieved through abstraction and polymorphism
 
-**Encapsulation** - The bundling of data and methods that operate on that data within a single unit, while restricting direct access to some components.
+**Liskov Substitution Principle (LSP)**
+- Objects of a superclass should be replaceable with objects of a subclass without breaking the application
+- Derived classes must be substitutable for their base classes
+- Ensures that inheritance hierarchies are well-designed
 
-**Inheritance** - A mechanism where a new class is based on an existing class, inheriting its properties and methods.
+**Interface Segregation Principle (ISP)**
+- Clients should not be forced to depend on interfaces they don't use
+- Many specific interfaces are better than one general-purpose interface
+- Prevents "fat" interfaces that force implementations of unused methods
 
-**Instance** - A specific occurrence of a class; an object created from a class blueprint.
+**Dependency Inversion Principle (DIP)**
+- High-level modules should not depend on low-level modules; both should depend on abstractions
+- Abstractions should not depend on details; details should depend on abstractions
+- Promotes loose coupling between components
 
-**Interface** - A contract that defines a set of method signatures that implementing classes must provide.
+## Design Patterns
 
-**Interface Segregation Principle (ISP)** - Clients should not be forced to depend on interfaces they do not use.
+**Observer Pattern**
+- Defines a one-to-many dependency between objects
+- When one object changes state, all dependent objects are notified automatically
+- Example: Newsletter subscription system
 
-**KISS (Keep It Simple, Stupid)** - A design principle that states systems work best when they are kept simple rather than made complex.
+**Strategy Pattern**
+- Defines a family of algorithms and makes them interchangeable
+- Allows algorithm selection at runtime
+- Example: Different payment methods in an e-commerce system
 
-**Liskov Substitution Principle (LSP)** - Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.
+**Factory Pattern**
+- Creates objects without specifying their exact classes
+- Provides an interface for creating families of related objects
+- Example: Creating different types of database connections
 
-**Method** - A function that belongs to a class and defines behavior that objects of that class can perform.
+**Decorator Pattern**
+- Adds new functionality to objects without altering their structure
+- Provides a flexible alternative to subclassing
+- Example: Adding features to a basic text editor
 
-**Method Overloading** - Defining multiple methods with the same name but different parameters (compile-time polymorphism).
+## Clean Code Principles
 
-**Method Overriding** - Redefining a parent class method in a child class with the same signature (runtime polymorphism).
+**DRY (Don't Repeat Yourself)**
+- Avoid code duplication
+- Each piece of knowledge should have a single, authoritative representation
+- Promotes maintainability and reduces errors
 
-**Object** - An instance of a class that contains both data (attributes) and code (methods) that manipulates that data.
+**KISS (Keep It Simple, Stupid)**
+- Prefer simple solutions over complex ones
+- Avoid unnecessary complexity
+- Simple code is easier to understand, test, and maintain
 
-**Object-Oriented Programming (OOP)** - A programming paradigm based on the concept of objects, which contain data and code.
+**YAGNI (You Aren't Gonna Need It)**
+- Don't implement functionality until you actually need it
+- Avoid building features based on speculation
+- Prevents over-engineering and wasted effort
 
-**Open/Closed Principle (OCP)** - Software entities should be open for extension but closed for modification.
+## Testing Terms
 
-**Polymorphism** - The ability of different classes to be treated as instances of the same type through a common interface.
+**Test-Driven Development (TDD)**
+- Development approach where tests are written before the actual code
+- Follows Red-Green-Refactor cycle
+- Ensures code meets requirements and is testable
 
-**Property** - A member of a class that provides a controlled way to access private fields, often through getter and setter methods.
+**Unit Test**
+- Tests individual components or methods in isolation
+- Verifies that each part works correctly on its own
+- Foundation of automated testing strategies
 
-**Refactoring** - The process of restructuring existing code without changing its external behavior to improve readability and reduce complexity.
+**Refactoring**
+- Process of improving code structure without changing its external behavior
+- Makes code more readable, maintainable, and efficient
+- Should be done incrementally with test coverage
 
-**Single Responsibility Principle (SRP)** - A class should have only one reason to change, meaning it should have only one job or responsibility.
+## General Programming Terms
 
-**SOLID** - An acronym for five design principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion.
+**Interface**
+- Contract that defines what methods a class must implement
+- Provides a way to achieve abstraction and multiple inheritance of type
+- Example: IDrawable interface requiring a Draw() method
 
-**State** - The current values of all attributes/properties of an object at any given time.
+**Abstract Class**
+- Class that cannot be instantiated directly
+- May contain both implemented and abstract methods
+- Used as a base class for other classes
 
-**TDD (Test-Driven Development)** - A development approach where tests are written before the actual code, driving the design.
+**Composition**
+- Design principle where classes contain instances of other classes
+- Alternative to inheritance for code reuse
+- Example: A car "has-a" engine rather than "is-a" engine
 
-**UML (Unified Modeling Language)** - A standardized modeling language used to visualize the design of object-oriented systems.
-
-**YAGNI (You Aren't Gonna Need It)** - A principle that suggests not adding functionality until it is necessary.
-
-## Common Design Patterns
-
-**Factory Pattern** - A creational pattern that provides an interface for creating objects without specifying their exact classes.
-
-**Observer Pattern** - A behavioral pattern where an object maintains a list of dependents and notifies them of state changes.
-
-**Singleton Pattern** - A creational pattern that ensures a class has only one instance and provides global access to it.
-
-**Strategy Pattern** - A behavioral pattern that defines a family of algorithms and makes them interchangeable.
-
-**Adapter Pattern** - A structural pattern that allows incompatible interfaces to work together.
-
-**Decorator Pattern** - A structural pattern that allows behavior to be added to objects dynamically without altering their structure.
-
-## Access Modifiers
-
-**Private** - Members that can only be accessed within the same class.
-
-**Protected** - Members that can be accessed within the same class and its subclasses.
-
-**Public** - Members that can be accessed from anywhere in the program.
-
-**Internal/Package** - Members that can be accessed within the same package or assembly (language-specific).
-
----
-
-*This glossary covers the essential terminology used throughout the course. Each term is explained in simple language to aid understanding for beginners while remaining accurate for more advanced learners.*
+**Dependency Injection**
+- Technique for providing dependencies to an object rather than having it create them
+- Promotes loose coupling and testability
+- Common implementation of Dependency Inversion Principle

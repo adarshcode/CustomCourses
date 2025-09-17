@@ -96,8 +96,6 @@ public class Volunteer : IWorkable, IEatable, ISleepable  // No salary
 
 ### C# Example
 
-**How to run:** `csc chapter-09-isp.cs && .\chapter-09-isp.exe`
-
 **Expected Output:**
 ```
 === ISP Violation Demo ===
@@ -112,14 +110,6 @@ Volunteer worker: Volunteer working
 Volunteer can eat: Volunteer eating
 All workers can work, but each has only the capabilities they need!
 ```
-
-### Python Example
-
-**How to run:** `python chapter-09-isp.py`
-
-### C++ Example
-
-**How to run:** `g++ -std=c++17 chapter-09-isp.cpp -o chapter-09-isp && .\chapter-09-isp.exe`
 
 ## Exercises
 

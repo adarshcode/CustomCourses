@@ -8,9 +8,9 @@ The course follows a systematic progression through 16 carefully crafted chapter
 
 ## What Makes This Course Special
 
-- **Multi-Language Approach**: Every concept is demonstrated with complete, runnable examples in C#, C++, and Python
-- **Progressive Difficulty**: Each topic includes basic, intermediate, and advanced examples
-- **Hands-On Learning**: All code examples are immediately runnable with standard toolchains
+- **C# Focus**: Every concept is demonstrated with complete, runnable C# examples
+- **Progressive Difficulty**: Each topic includes basic, intermediate, and advanced examples  
+- **Hands-On Learning**: All code examples are immediately runnable with .NET SDK
 - **Practical Focus**: Real-world scenarios and common pitfalls are addressed throughout
 - **Single Responsibility Design**: Each chapter focuses on one concept, making learning manageable
 
@@ -40,39 +40,54 @@ The course follows a systematic progression through 16 carefully crafted chapter
 
 ## Prerequisites
 
-- Basic programming knowledge in at least one language
+- Basic programming knowledge in any language
 - Understanding of variables, functions, and basic control structures
 - Familiarity with command-line tools for compiling/running programs
+- Basic C# syntax knowledge (variables, methods, classes) is helpful but not required
 
 ## Required Tools
 
-### C# Examples
+### C# Development Environment
 - .NET SDK 6.0 or later
-- Any text editor or IDE (Visual Studio, VS Code, etc.)
+- Any text editor or IDE (Visual Studio, VS Code, JetBrains Rider, etc.)
 
-### C++ Examples
-- GCC compiler with C++17 support
-- Any text editor or IDE
-
-### Python Examples
-- Python 3.9 or later
-- Any text editor or IDE
+### Installation Steps
+1. Download and install .NET SDK from https://dotnet.microsoft.com/download
+2. Verify installation: `dotnet --version`
+3. Choose your preferred editor/IDE
+4. Clone or download the course materials
 
 ## How to Use This Course
 
 1. **Read each chapter sequentially** - concepts build upon each other
-2. **Run all code examples** - hands-on practice is essential
+2. **Run all C# code examples** - hands-on practice is essential
 3. **Complete the exercises** - they reinforce learning
 4. **Check your understanding** - use the chapter checklists
 5. **Experiment** - modify examples to see what happens
 
+## Running the Examples
+
+Each chapter includes a corresponding C# file with complete examples:
+
+```bash
+# Navigate to the code-examples directory
+cd code-examples
+
+# Compile and run any chapter example
+dotnet run --project chapter-01.cs
+
+# Or compile first, then run
+csc chapter-01.cs
+./chapter-01.exe
+```
+
 ## Study Paths
 
 ### Absolute Beginners
-Start with Chapter 1 and work through sequentially. Focus on basic examples first, then move to intermediate examples as you become comfortable.
+Start with Chapter 1 and work through sequentially. Focus on understanding the concepts before diving into complex examples.
 
-### Intermediate Developers
-If you know basic OOP, you can start with Chapter 6 (SOLID principles). Review earlier chapters if needed.
+### Intermediate Developers  
+If you know basic OOP, you can start with Chapter 6 (SOLID principles). Review earlier chapters if needed for C# syntax.
 
 ### Interview Preparation
 Focus on Chapters 6-12 for design principles and patterns. Chapters 15-16 are excellent for discussing code quality.
@@ -80,8 +95,8 @@ Focus on Chapters 6-12 for design principles and patterns. Chapters 15-16 are ex
 ## Getting Help
 
 Each chapter includes:
-- Clear explanations at two levels (beginner and developer)
-- Complete, runnable code examples
+- Clear explanations at multiple levels
+- Complete, runnable C# code examples
 - Expected outputs for verification
 - Practice exercises with hints
 - Self-assessment checklists
@@ -90,10 +105,11 @@ Each chapter includes:
 
 All course materials are organized in:
 - `chapters/` - Individual chapter content
-- `code-examples/` - All runnable code files organized by chapter
-- `COURSE-MANIFEST.md` - Complete file listing
+- `code-examples/` - All runnable C# files organized by chapter
+- `COURSE-MANIFEST.md` - Complete file listing and navigation
 - `GLOSSARY.md` - Technical terms and definitions
+- `STUDY-PATHS.md` - Recommended learning sequences
 
 ---
 
-Ready to become a better object-oriented programmer? Let's start with Chapter 1!
+Ready to become a better C# object-oriented programmer? Let's start with Chapter 1!

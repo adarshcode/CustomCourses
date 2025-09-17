@@ -3,41 +3,70 @@
 ## Child-Friendly Explanation
 Imagine if your teacher had to teach math, cook lunch, drive the school bus, AND clean the classrooms all by themselves! That would be way too much work for one person, and they probably wouldn't do any of those jobs very well. The Single Responsibility Principle is like saying "each person should have just one main job to do really well" - in programming, each class should do just one thing really well too!
 
-```python
-# BAD - One class doing too many jobs (like a super-teacher!)
-class SuperTeacher:
-    def teach_math(self, students):
-        print("Teaching math...")
+```csharp
+// BAD - One class doing too many jobs (like a super-teacher!)
+public class SuperTeacher
+{
+    public void TeachMath(List<string> students)
+    {
+        Console.WriteLine("Teaching math...");
+    }
     
-    def cook_lunch(self, meal_plan):
-        print("Cooking lunch...")
+    public void CookLunch(string mealPlan)
+    {
+        Console.WriteLine("Cooking lunch...");
+    }
     
-    def drive_bus(self, route):
-        print("Driving school bus...")
+    public void DriveBus(string route)
+    {
+        Console.WriteLine("Driving school bus...");
+    }
     
-    def clean_classroom(self, room_number):
-        print("Cleaning classroom...")
-    # This class has too many responsibilities!
+    public void CleanClassroom(int roomNumber)
+    {
+        Console.WriteLine("Cleaning classroom...");
+    }
+    // This class has too many responsibilities!
+}
 
-# GOOD - Each class has one clear job
-class MathTeacher:
-    def teach_math(self, students):
-        print("Teaching math really well!")
+// GOOD - Each class has one clear job
+public class MathTeacher
+{
+    public void TeachMath(List<string> students)
+    {
+        Console.WriteLine("Teaching math really well!");
+    }
+}
 
-class Chef:
-    def cook_lunch(self, meal_plan):
-        print("Cooking delicious lunch!")
+public class Chef
+{
+    public void CookLunch(string mealPlan)
+    {
+        Console.WriteLine("Cooking delicious lunch!");
+    }
+}
 
-class BusDriver:
-    def drive_bus(self, route):
-        print("Safely driving school bus!")
+public class BusDriver
+{
+    public void DriveBus(string route)
+    {
+        Console.WriteLine("Safely driving school bus!");
+    }
+}
 
-class Janitor:
-    def clean_classroom(self, room_number):
-        print("Keeping classroom spotless!")
+public class Janitor
+{
+    public void CleanClassroom(int roomNumber)
+    {
+        Console.WriteLine("Keeping classroom spotless!");
+    }
+}
 
-# Now each person can focus on doing their one job excellently!
+// Now each person can focus on doing their one job excellently!
 ```
+
+**Code Explanation:**
+This example demonstrates **Single Responsibility Principle** by showing how the problematic `SuperTeacher` class (which handles teaching, cooking, driving, and cleaning) violates SRP because it has **multiple reasons to change**. The improved design splits these into separate classes (`MathTeacher`, `Chef`, `BusDriver`, `Janitor`), where each class has **one clear responsibility** and would only need to change for reasons related to its specific job.
 
 ## Developer-Level Explanation
 The Single Responsibility Principle states that a class should have only one reason to change, meaning it should have only one job or responsibility. This is the first and arguably most important principle of SOLID design.
@@ -136,28 +165,13 @@ public class UserService
 
 ### Basic Example
 
-**How to run:**
-- C#: `csc chapter-06-basic.cs && .\chapter-06-basic.exe`
-- C++: `g++ -std=c++17 chapter-06-basic.cpp -o chapter-06-basic && .\chapter-06-basic.exe`
-- Python: `python chapter-06-basic.py`
-
 **Expected Output:** Shows before/after comparison of SRP violation and correction.
 
 ### Intermediate Example
 
-**How to run:**
-- C#: `csc chapter-06-intermediate.cs && .\chapter-06-intermediate.exe`
-- C++: `g++ -std=c++17 chapter-06-intermediate.cpp -o chapter-06-intermediate && .\chapter-06-intermediate.exe`
-- Python: `python chapter-06-intermediate.py`
-
 **Expected Output:** Demonstrates proper separation of concerns in an employee management system.
 
 ### Advanced Example
-
-**How to run:**
-- C#: `csc chapter-06-advanced.cs && .\chapter-06-advanced.exe`
-- C++: `g++ -std=c++17 chapter-06-advanced.cpp -o chapter-06-advanced && .\chapter-06-advanced.exe`
-- Python: `python chapter-06-advanced.py`
 
 **Why this advanced solution follows SRP:**
 - **Clear Responsibilities**: Each class has one well-defined purpose
@@ -168,90 +182,152 @@ public class UserService
 ### Real-World SRP Example: E-commerce Order System
 
 **Violating SRP (Bad):**
-```python
-class Order:
-    def __init__(self, customer_id, items):
-        self.customer_id = customer_id
-        self.items = items
-        self.total = 0
-        self.status = "pending"
+```csharp
+public class Order
+{
+    public int CustomerId { get; set; }
+    public List<OrderItem> Items { get; set; }
+    public decimal Total { get; set; }
+    public string Status { get; set; }
     
-    # Responsibility 1: Calculate order totals
-    def calculate_total(self):
-        self.total = sum(item.price * item.quantity for item in self.items)
-        # Apply taxes
-        self.total *= 1.08
-        return self.total
+    public Order(int customerId, List<OrderItem> items)
+    {
+        CustomerId = customerId;
+        Items = items;
+        Total = 0;
+        Status = "pending";
+    }
     
-    # Responsibility 2: Database operations
-    def save_to_database(self):
-        print(f"INSERT INTO orders VALUES ({self.customer_id}, {self.total})")
-        for item in self.items:
-            print(f"INSERT INTO order_items VALUES ({item.id}, {item.quantity})")
+    // Responsibility 1: Calculate order totals
+    public decimal CalculateTotal()
+    {
+        Total = Items.Sum(item => item.Price * item.Quantity);
+        // Apply taxes
+        Total *= 1.08m;
+        return Total;
+    }
     
-    # Responsibility 3: Email notifications
-    def send_confirmation_email(self):
-        print(f"Sending email to customer {self.customer_id}")
-        print("Subject: Order Confirmation")
-        print(f"Your order total: ${self.total}")
+    // Responsibility 2: Database operations
+    public void SaveToDatabase()
+    {
+        Console.WriteLine($"INSERT INTO orders VALUES ({CustomerId}, {Total})");
+        foreach (var item in Items)
+        {
+            Console.WriteLine($"INSERT INTO order_items VALUES ({item.Id}, {item.Quantity})");
+        }
+    }
     
-    # Responsibility 4: Inventory management
-    def update_inventory(self):
-        for item in self.items:
-            print(f"Reducing inventory for {item.name} by {item.quantity}")
+    // Responsibility 3: Email notifications
+    public void SendConfirmationEmail()
+    {
+        Console.WriteLine($"Sending email to customer {CustomerId}");
+        Console.WriteLine("Subject: Order Confirmation");
+        Console.WriteLine($"Your order total: ${Total}");
+    }
     
-    # Responsibility 5: Payment processing
-    def process_payment(self, credit_card):
-        print(f"Processing payment of ${self.total} with card {credit_card}")
-        self.status = "paid"
+    // Responsibility 4: Inventory management
+    public void UpdateInventory()
+    {
+        foreach (var item in Items)
+        {
+            Console.WriteLine($"Reducing inventory for {item.Name} by {item.Quantity}");
+        }
+    }
     
-    # This class changes for 5 different reasons!
+    // Responsibility 5: Payment processing
+    public void ProcessPayment(string creditCard)
+    {
+        Console.WriteLine($"Processing payment of ${Total} with card {creditCard}");
+        Status = "paid";
+    }
+    
+    // This class changes for 5 different reasons!
+}
 ```
 
 **Following SRP (Good):**
-```python
-# Each class has ONE responsibility
+```csharp
+// Each class has ONE responsibility
 
-class Order:  # Only manages order data
-    def __init__(self, customer_id, items):
-        self.customer_id = customer_id
-        self.items = items
-        self.total = 0
-        self.status = "pending"
-
-class OrderCalculator:  # Only calculates order totals
-    def __init__(self, tax_rate=0.08):
-        self.tax_rate = tax_rate
+public class Order  // Only manages order data
+{
+    public int CustomerId { get; set; }
+    public List<OrderItem> Items { get; set; }
+    public decimal Total { get; set; }
+    public string Status { get; set; }
     
-    def calculate_total(self, order):
-        subtotal = sum(item.price * item.quantity for item in order.items)
-        order.total = subtotal * (1 + self.tax_rate)
-        return order.total
+    public Order(int customerId, List<OrderItem> items)
+    {
+        CustomerId = customerId;
+        Items = items;
+        Total = 0;
+        Status = "pending";
+    }
+}
 
-class OrderRepository:  # Only handles database operations
-    def save(self, order):
-        print(f"Saving order for customer {order.customer_id} - Total: ${order.total}")
-        # Database logic here
+public class OrderCalculator  // Only calculates order totals
+{
+    private readonly decimal taxRate;
     
-    def find_by_id(self, order_id):
-        print(f"Loading order {order_id} from database")
-        # Database retrieval logic
+    public OrderCalculator(decimal taxRate = 0.08m)
+    {
+        this.taxRate = taxRate;
+    }
+    
+    public decimal CalculateTotal(Order order)
+    {
+        var subtotal = order.Items.Sum(item => item.Price * item.Quantity);
+        order.Total = subtotal * (1 + taxRate);
+        return order.Total;
+    }
+}
 
-class EmailNotificationService:  # Only handles email notifications
-    def send_order_confirmation(self, order, customer_email):
-        print(f"📧 Sending confirmation to {customer_email}")
-        print(f"Order total: ${order.total}")
+public class OrderRepository  // Only handles database operations
+{
+    public void Save(Order order)
+    {
+        Console.WriteLine($"Saving order for customer {order.CustomerId} - Total: ${order.Total}");
+        // Database logic here
+    }
     
-    def send_shipping_notification(self, order, tracking_number):
-        print(f"📧 Sending shipping notification - Tracking: {tracking_number}")
+    public Order FindById(int orderId)
+    {
+        Console.WriteLine($"Loading order {orderId} from database");
+        // Database retrieval logic
+        return null; // Placeholder
+    }
+}
 
-class InventoryService:  # Only manages inventory
-    def update_stock(self, order):
-        for item in order.items:
-            print(f"📦 Reducing {item.name} stock by {item.quantity}")
+public class EmailNotificationService  // Only handles email notifications
+{
+    public void SendOrderConfirmation(Order order, string customerEmail)
+    {
+        Console.WriteLine($"📧 Sending confirmation to {customerEmail}");
+        Console.WriteLine($"Order total: ${order.Total}");
+    }
     
-    def check_availability(self, items):
-        print("Checking item availability...")
+    public void SendShippingNotification(Order order, string trackingNumber)
+    {
+        Console.WriteLine($"📧 Sending shipping notification - Tracking: {trackingNumber}");
+    }
+}
+
+public class InventoryService  // Only manages inventory
+{
+    public void UpdateStock(Order order)
+    {
+        foreach (var item in order.Items)
+        {
+            Console.WriteLine($"📦 Reducing {item.Name} stock by {item.Quantity}");
+        }
+    }
+    
+    public bool CheckAvailability(List<OrderItem> items)
+    {
+        Console.WriteLine("Checking item availability...");
+        return true; // Placeholder
+    }
+}
         return True  # Simplified
 
 class PaymentProcessor:  # Only processes payments
@@ -330,33 +406,37 @@ print(f"Order processed: {success}")
 
 With SRP, each class is easy to test in isolation:
 
-```cpp
-#include <gtest/gtest.h>  // Example with Google Test
-
+```csharp
 // SRP makes unit testing straightforward
-class TaxCalculator {
-public:
-    double calculateTax(double amount, double rate) {
+public class TaxCalculator 
+{
+    public double CalculateTax(double amount, double rate) 
+    {
         return amount * rate;
     }
-};
-
-class PriceFormatter {
-public:
-    string formatPrice(double price) {
-        return "$" + to_string(static_cast<int>(price * 100) / 100.0);
-    }
-};
-
-// Easy to test - each class has one clear purpose
-TEST(TaxCalculatorTest, CalculatesTaxCorrectly) {
-    TaxCalculator calculator;
-    EXPECT_DOUBLE_EQ(10.0, calculator.calculateTax(100.0, 0.1));
 }
 
-TEST(PriceFormatterTest, FormatsCorrectly) {
-    PriceFormatter formatter;
-    EXPECT_EQ("$99.99", formatter.formatPrice(99.99));
+public class PriceFormatter 
+{
+    public string FormatPrice(double price) 
+    {
+        return $"${price:F2}";
+    }
+}
+
+// Easy to test - each class has one clear purpose
+[Test]
+public void TaxCalculator_CalculatesTaxCorrectly() 
+{
+    var calculator = new TaxCalculator();
+    Assert.AreEqual(10.0, calculator.CalculateTax(100.0, 0.1), 0.01);
+}
+
+[Test]
+public void PriceFormatter_FormatsCorrectly() 
+{
+    var formatter = new PriceFormatter();
+    Assert.AreEqual("$99.99", formatter.FormatPrice(99.99));
 }
 
 // If we had one class doing both jobs, testing would be harder:

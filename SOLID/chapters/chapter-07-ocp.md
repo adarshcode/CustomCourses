@@ -3,54 +3,95 @@
 ## Child-Friendly Explanation
 Imagine you have a really nice toy box that you love. Now, you get new toys for your birthday, but they don't fit in your current box. Instead of breaking apart your perfect toy box and rebuilding it (which might ruin it!), you can add a new section or put an extension on top. The Open/Closed Principle is like this - when you need new features in your code, you should be able to add them without breaking the code that already works perfectly!
 
-```python
-# BAD - Breaking the toy box every time we get new toys
-class ShapeCalculator:
-    def calculate_area(self, shapes):
-        total_area = 0
-        for shape in shapes:
-            if shape.type == "circle":
-                total_area += 3.14 * shape.radius ** 2
-            elif shape.type == "rectangle":
-                total_area += shape.width * shape.height
-            # OH NO! To add triangle, we have to MODIFY this working code!
-            # elif shape.type == "triangle":  # This breaks our perfect code!
-            #     total_area += 0.5 * shape.base * shape.height
-        return total_area
+```csharp
+// BAD - Breaking the toy box every time we get new toys
+public class ShapeCalculator
+{
+    public double CalculateArea(List<dynamic> shapes)
+    {
+        double totalArea = 0;
+        foreach (var shape in shapes)
+        {
+            if (shape.Type == "circle")
+            {
+                totalArea += 3.14 * shape.Radius * shape.Radius;
+            }
+            else if (shape.Type == "rectangle")
+            {
+                totalArea += shape.Width * shape.Height;
+            }
+            // OH NO! To add triangle, we have to MODIFY this working code!
+            // else if (shape.Type == "triangle")  // This breaks our perfect code!
+            // {
+            //     totalArea += 0.5 * shape.Base * shape.Height;
+            // }
+        }
+        return totalArea;
+    }
+}
 
-# GOOD - Extending without breaking what works
-class Shape:
-    def calculate_area(self):
-        pass  # Each shape knows how to calculate its own area
+// GOOD - Extending without breaking what works
+public abstract class Shape
+{
+    public abstract double CalculateArea();  // Each shape knows how to calculate its own area
+}
 
-class Circle(Shape):
-    def __init__(self, radius):
-        self.radius = radius
+public class Circle : Shape
+{
+    private double radius;
     
-    def calculate_area(self):
-        return 3.14 * self.radius ** 2
-
-class Rectangle(Shape):
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+    public Circle(double radius)
+    {
+        this.radius = radius;
+    }
     
-    def calculate_area(self):
-        return self.width * self.height
+    public override double CalculateArea()
+    {
+        return 3.14 * radius * radius;
+    }
+}
 
-# Adding new shapes doesn't break existing code!
-class Triangle(Shape):  # NEW! But doesn't break anything
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+public class Rectangle : Shape
+{
+    private double width, height;
     
-    def calculate_area(self):
-        return 0.5 * self.base * self.height
+    public Rectangle(double width, double height)
+    {
+        this.width = width;
+        this.height = height;
+    }
+    
+    public override double CalculateArea()
+    {
+        return width * height;
+    }
+}
 
-class AreaCalculator:
-    def calculate_total_area(self, shapes):
-        return sum(shape.calculate_area() for shape in shapes)
-        # This code NEVER needs to change, no matter how many shapes we add!
+// Adding new shapes doesn't break existing code!
+public class Triangle : Shape  // NEW! But doesn't break anything
+{
+    private double baseLength, height;
+    
+    public Triangle(double baseLength, double height)
+    {
+        this.baseLength = baseLength;
+        this.height = height;
+    }
+    
+    public override double CalculateArea()
+    {
+        return 0.5 * baseLength * height;
+    }
+}
+
+public class AreaCalculator
+{
+    public double CalculateTotalArea(List<Shape> shapes)
+    {
+        return shapes.Sum(shape => shape.CalculateArea());
+        // This code NEVER needs to change, no matter how many shapes we add!
+    }
+}
 ```
 
 ## Developer-Level Explanation
@@ -147,259 +188,315 @@ processor.ProcessPayment(new BitcoinPayment(), 300);  // NEW! But no existing co
 
 ### Plugin Architecture: Ultimate OCP Example
 
-```cpp
-#include <vector>
-#include <memory>
-#include <string>
-#include <iostream>
-
+```csharp
 // Base interface that plugins implement
-class DataProcessor {
-public:
-    virtual ~DataProcessor() = default;
-    virtual void processData(const std::string& data) = 0;
-    virtual std::string getProcessorName() const = 0;
-};
+public interface IDataProcessor
+{
+    void ProcessData(string data);
+    string GetProcessorName();
+}
 
 // Core system that uses plugins - NEVER changes!
-class DataProcessingEngine {
-private:
-    std::vector<std::unique_ptr<DataProcessor>> processors;
+public class DataProcessingEngine
+{
+    private List<IDataProcessor> processors = new List<IDataProcessor>();
     
-public:
-    void registerProcessor(std::unique_ptr<DataProcessor> processor) {
-        std::cout << "Registered processor: " << processor->getProcessorName() << std::endl;
-        processors.push_back(std::move(processor));
+    public void RegisterProcessor(IDataProcessor processor)
+    {
+        Console.WriteLine($"Registered processor: {processor.GetProcessorName()}");
+        processors.Add(processor);
     }
     
-    void processAllData(const std::string& data) {
-        std::cout << "\n=== Processing data with all registered processors ===" << std::endl;
-        for (const auto& processor : processors) {
-            std::cout << "\n--- " << processor->getProcessorName() << " ---" << std::endl;
-            processor->processData(data);
+    public void ProcessAllData(string data)
+    {
+        Console.WriteLine("\n=== Processing data with all registered processors ===");
+        foreach (var processor in processors)
+        {
+            Console.WriteLine($"\n--- {processor.GetProcessorName()} ---");
+            processor.ProcessData(data);
         }
     }
-};
+}
 
 // Original processors - shipped with v1.0
-class JsonProcessor : public DataProcessor {
-public:
-    void processData(const std::string& data) override {
-        std::cout << "Parsing JSON data..." << std::endl;
-        std::cout << "Validating JSON structure..." << std::endl;
-        std::cout << "JSON processing complete!" << std::endl;
+public class JsonProcessor : IDataProcessor
+{
+    public void ProcessData(string data)
+    {
+        Console.WriteLine("Parsing JSON data...");
+        Console.WriteLine("Validating JSON structure...");
+        Console.WriteLine("JSON processing complete!");
     }
     
-    std::string getProcessorName() const override {
+    public string GetProcessorName()
+    {
         return "JSON Processor v1.0";
     }
-};
+}
 
-class XmlProcessor : public DataProcessor {
-public:
-    void processData(const std::string& data) override {
-        std::cout << "Parsing XML data..." << std::endl;
-        std::cout << "Validating against schema..." << std::endl;
-        std::cout << "XML processing complete!" << std::endl;
+public class XmlProcessor : IDataProcessor
+{
+    public void ProcessData(string data)
+    {
+        Console.WriteLine("Parsing XML data...");
+        Console.WriteLine("Validating against schema...");
+        Console.WriteLine("XML processing complete!");
     }
     
-    std::string getProcessorName() const override {
+    public string GetProcessorName()
+    {
         return "XML Processor v1.0";
     }
-};
+}
 
 // NEW processors added in v2.0 - NO existing code modified!
-class CsvProcessor : public DataProcessor {
-public:
-    void processData(const std::string& data) override {
-        std::cout << "Parsing CSV data..." << std::endl;
-        std::cout << "Detecting column headers..." << std::endl;
-        std::cout << "CSV processing complete!" << std::endl;
+public class CsvProcessor : IDataProcessor
+{
+    public void ProcessData(string data)
+    {
+        Console.WriteLine("Parsing CSV data...");
+        Console.WriteLine("Detecting column headers...");
+        Console.WriteLine("CSV processing complete!");
     }
     
-    std::string getProcessorName() const override {
+    public string GetProcessorName()
+    {
         return "CSV Processor v2.0";  // NEW!
     }
-};
+}
 
-class YamlProcessor : public DataProcessor {
-public:
-    void processData(const std::string& data) override {
-        std::cout << "Parsing YAML data..." << std::endl;
-        std::cout << "Processing nested structures..." << std::endl;
-        std::cout << "YAML processing complete!" << std::endl;
+public class YamlProcessor : IDataProcessor
+{
+    public void ProcessData(string data)
+    {
+        Console.WriteLine("Parsing YAML data...");
+        Console.WriteLine("Processing nested structures...");
+        Console.WriteLine("YAML processing complete!");
     }
     
-    std::string getProcessorName() const override {
+    public string GetProcessorName()
+    {
         return "YAML Processor v2.0";  // NEW!
     }
-};
+}
 
 // FUTURE processors for v3.0 - still no existing code modified!
-class ProtobufProcessor : public DataProcessor {
-public:
-    void processData(const std::string& data) override {
-        std::cout << "Deserializing Protocol Buffer data..." << std::endl;
-        std::cout << "Validating message types..." << std::endl;
-        std::cout << "Protobuf processing complete!" << std::endl;
+public class ProtobufProcessor : IDataProcessor
+{
+    public void ProcessData(string data)
+    {
+        Console.WriteLine("Deserializing Protocol Buffer data...");
+        Console.WriteLine("Validating message types...");
+        Console.WriteLine("Protobuf processing complete!");
     }
     
-    std::string getProcessorName() const override {
+    public string GetProcessorName()
+    {
         return "Protocol Buffer Processor v3.0";  // FUTURE!
     }
-};
+}
 
 // Usage - system extends without any core changes
-int main() {
-    DataProcessingEngine engine;
+public static void Main()
+{
+    var engine = new DataProcessingEngine();
     
     // Version 1.0 - original processors
-    engine.registerProcessor(std::make_unique<JsonProcessor>());
-    engine.registerProcessor(std::make_unique<XmlProcessor>());
+    engine.RegisterProcessor(new JsonProcessor());
+    engine.RegisterProcessor(new XmlProcessor());
     
     // Version 2.0 - add new processors without changing engine!
-    engine.registerProcessor(std::make_unique<CsvProcessor>());
-    engine.registerProcessor(std::make_unique<YamlProcessor>());
+    // Version 2.0 - add more processors!
+    engine.RegisterProcessor(new CsvProcessor());
+    engine.RegisterProcessor(new YamlProcessor());
     
     // Version 3.0 - add even more processors!
-    engine.registerProcessor(std::make_unique<ProtobufProcessor>());
+    engine.RegisterProcessor(new ProtobufProcessor());
     
     // Engine works with all processors without modification
-    engine.processAllData("sample data");
-    
-    return 0;
+    engine.ProcessAllData("sample data");
 }
 ```
 
 ### Strategy Pattern: OCP in Action
 
-```python
-from abc import ABC, abstractmethod
-from enum import Enum
+```csharp
+// Abstract strategy interface
+public interface ICompressionStrategy
+{
+    string Compress(string data);
+    string Decompress(string compressedData);
+    string GetName();
+}
 
-# Abstract strategy interface
-class CompressionStrategy(ABC):
-    @abstractmethod
-    def compress(self, data: str) -> str:
-        pass
+// Original compression algorithms
+public class ZipCompression : ICompressionStrategy
+{
+    public string Compress(string data)
+    {
+        return $"ZIP[{data}]";
+    }
     
-    @abstractmethod
-    def decompress(self, compressed_data: str) -> str:
-        pass
+    public string Decompress(string compressedData)
+    {
+        return compressedData.Replace("ZIP[", "").Replace("]", "");
+    }
     
-    @abstractmethod
-    def get_name(self) -> str:
-        pass
+    public string GetName()
+    {
+        return "ZIP Compression";
+    }
+}
 
-# Original compression algorithms
-class ZipCompression(CompressionStrategy):
-    def compress(self, data: str) -> str:
-        return f"ZIP[{data}]"
+public class GzipCompression : ICompressionStrategy
+{
+    public string Compress(string data)
+    {
+        return $"GZIP[{data}]";
+    }
     
-    def decompress(self, compressed_data: str) -> str:
-        return compressed_data.replace("ZIP[", "").replace("]", "")
+    public string Decompress(string compressedData)
+    {
+        return compressedData.Replace("GZIP[", "").Replace("]", "");
+    }
     
-    def get_name(self) -> str:
-        return "ZIP Compression"
+    public string GetName()
+    {
+        return "GZIP Compression";
+    }
+}
 
-class GzipCompression(CompressionStrategy):
-    def compress(self, data: str) -> str:
-        return f"GZIP[{data}]"
+// NEW algorithms added later - no existing code modified!
+public class Bzip2Compression : ICompressionStrategy
+{
+    public string Compress(string data)
+    {
+        return $"BZIP2[{data}]";
+    }
     
-    def decompress(self, compressed_data: str) -> str:
-        return compressed_data.replace("GZIP[", "").replace("]", "")
+    public string Decompress(string compressedData)
+    {
+        return compressedData.Replace("BZIP2[", "").Replace("]", "");
+    }
     
-    def get_name(self) -> str:
-        return "GZIP Compression"
+    public string GetName()
+    {
+        return "BZIP2 Compression";
+    }
+}
 
-# NEW algorithms added later - no existing code modified!
-class Bzip2Compression(CompressionStrategy):
-    def compress(self, data: str) -> str:
-        return f"BZIP2[{data}]"
+public class LzmaCompression : ICompressionStrategy
+{
+    public string Compress(string data)
+    {
+        return $"LZMA[{data}]";
+    }
     
-    def decompress(self, compressed_data: str) -> str:
-        return compressed_data.replace("BZIP2[", "").replace("]", "")
+    public string Decompress(string compressedData)
+    {
+        return compressedData.Replace("LZMA[", "").Replace("]", "");
+    }
     
-    def get_name(self) -> str:
-        return "BZIP2 Compression"
+    public string GetName()
+    {
+        return "LZMA Compression";
+    }
+}
 
-class LzmaCompression(CompressionStrategy):
-    def compress(self, data: str) -> str:
-        return f"LZMA[{data}]"
+// Context class - NEVER needs modification for new compression types!
+public class FileCompressor
+{
+    private ICompressionStrategy _strategy;
     
-    def decompress(self, compressed_data: str) -> str:
-        return compressed_data.replace("LZMA[", "").replace("]", "")
+    public FileCompressor(ICompressionStrategy strategy)
+    {
+        _strategy = strategy;
+    }
     
-    def get_name(self) -> str:
-        return "LZMA Compression"
+    public void SetStrategy(ICompressionStrategy strategy)
+    {
+        _strategy = strategy;
+        Console.WriteLine($"Switched to {strategy.GetName()}");
+    }
+    
+    public string CompressFile(string filename, string data)
+    {
+        Console.WriteLine($"Compressing {filename} using {_strategy.GetName()}");
+        var compressed = _strategy.Compress(data);
+        Console.WriteLine($"Compressed: {data} -> {compressed}");
+        return compressed;
+    }
+    
+    public string DecompressFile(string compressedData)
+    {
+        Console.WriteLine($"Decompressing using {_strategy.GetName()}");
+        var decompressed = _strategy.Decompress(compressedData);
+        Console.WriteLine($"Decompressed: {compressedData} -> {decompressed}");
+        return decompressed;
+    }
+}
 
-# Context class - NEVER needs modification for new compression types!
-class FileCompressor:
-    def __init__(self, strategy: CompressionStrategy):
-        self._strategy = strategy
-    
-    def set_strategy(self, strategy: CompressionStrategy):
-        self._strategy = strategy
-        print(f"Switched to {strategy.get_name()}")
-    
-    def compress_file(self, filename: str, data: str) -> str:
-        print(f"Compressing {filename} using {self._strategy.get_name()}")
-        compressed = self._strategy.compress(data)
-        print(f"Compressed: {data} -> {compressed}")
-        return compressed
-    
-    def decompress_file(self, compressed_data: str) -> str:
-        print(f"Decompressing using {self._strategy.get_name()}")
-        decompressed = self._strategy.decompress(compressed_data)
-        print(f"Decompressed: {compressed_data} -> {decompressed}")
-        return decompressed
-
-# Factory for creating compression strategies - easy to extend!
-class CompressionFactory:
-    @staticmethod
-    def create_compressor(compression_type: str) -> CompressionStrategy:
-        strategies = {
-            "zip": ZipCompression(),
-            "gzip": GzipCompression(),
-            "bzip2": Bzip2Compression(),  # NEW!
-            "lzma": LzmaCompression(),    # NEW!
+// Factory for creating compression strategies - easy to extend!
+public static class CompressionFactory
+{
+    public static ICompressionStrategy CreateCompressor(string compressionType)
+    {
+        var strategies = new Dictionary<string, ICompressionStrategy>
+        {
+            ["zip"] = new ZipCompression(),
+            ["gzip"] = new GzipCompression(),
+            ["bzip2"] = new Bzip2Compression(),  // NEW!
+            ["lzma"] = new LzmaCompression()     // NEW!
+        };
+        
+        if (strategies.TryGetValue(compressionType.ToLower(), out var strategy))
+        {
+            return strategy;
         }
         
-        strategy = strategies.get(compression_type.lower())
-        if not strategy:
-            raise ValueError(f"Unknown compression type: {compression_type}")
-        return strategy
+        throw new ArgumentException($"Unknown compression type: {compressionType}");
+    }
+}
 
-# Usage - system works with all compression types without modification
-def demonstrate_ocp():
-    sample_data = "Hello, World! This is test data for compression."
+// Usage - system works with all compression types without modification
+public static void DemonstrateOcp()
+{
+    string sampleData = "Hello, World! This is test data for compression.";
     
-    # Try all compression types
-    compression_types = ["zip", "gzip", "bzip2", "lzma"]
+    // Try all compression types
+    string[] compressionTypes = { "zip", "gzip", "bzip2", "lzma" };
     
-    for comp_type in compression_types:
-        print(f"\n{'='*50}")
-        print(f"Testing {comp_type.upper()} compression")
-        print('='*50)
+    foreach (var compType in compressionTypes)
+    {
+        Console.WriteLine($"\n{"=".PadLeft(50, '=')}");
+        Console.WriteLine($"Testing {compType.ToUpper()} compression");
+        Console.WriteLine("=".PadLeft(50, '='));
         
-        # Create strategy and compressor
-        strategy = CompressionFactory.create_compressor(comp_type)
-        compressor = FileCompressor(strategy)
+        // Create strategy and compressor
+        var strategy = CompressionFactory.CreateCompressor(compType);
+        var compressor = new FileCompressor(strategy);
         
-        # Compress and decompress
-        compressed = compressor.compress_file("test.txt", sample_data)
-        decompressed = compressor.decompress_file(compressed)
+        // Compress and decompress
+        var compressed = compressor.CompressFile("test.txt", sampleData);
+        var decompressed = compressor.DecompressFile(compressed);
         
-        # Verify round-trip
-        assert decompressed == sample_data, "Round-trip failed!"
-        print("✅ Round-trip successful!")
+        // Verify round-trip
+        if (decompressed == sampleData)
+        {
+            Console.WriteLine("✅ Round-trip successful!");
+        }
+    }
+}
 
-# Adding new compression is easy - just implement the interface!
-class LZ4Compression(CompressionStrategy):  # BRAND NEW!
-    def compress(self, data: str) -> str:
-        return f"LZ4[{data}]"
+// Adding new compression is easy - just implement the interface!
+public class LZ4Compression : ICompressionStrategy  // BRAND NEW!
+{
+    public string Compress(string data)
+    {
+        return $"LZ4[{data}]";
+    }
     
-    def decompress(self, compressed_data: str) -> str:
+    public string Decompress(string compressedData)
         return compressed_data.replace("LZ4[", "").replace("]", "")
     
     def get_name(self) -> str:
@@ -428,19 +525,9 @@ Hexagon area: 150
 
 ### Intermediate Example
 
-**How to run:**
-- C#: `csc chapter-07-intermediate.cs && .\chapter-07-intermediate.exe`
-- C++: `g++ -std=c++17 chapter-07-intermediate.cpp -o chapter-07-intermediate && .\chapter-07-intermediate.exe`
-- Python: `python chapter-07-intermediate.py`
-
 **Expected Output:** Shows a discount calculation system that follows OCP.
 
 ### Advanced Example
-
-**How to run:**
-- C#: `csc chapter-07-advanced.cs && .\chapter-07-advanced.exe`
-- C++: `g++ -std=c++17 chapter-07-advanced.cpp -o chapter-07-advanced && .\chapter-07-advanced.exe`
-- Python: `python chapter-07-advanced.py`
 
 **Why this advanced solution follows OCP:**
 - **Strategy Pattern**: Different algorithms can be added without modifying existing code

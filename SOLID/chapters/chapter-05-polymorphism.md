@@ -3,33 +3,47 @@
 ## Child-Friendly Explanation
 Imagine you have a remote control that has a "play" button. When you point it at a TV and press play, it plays a TV show. When you point it at a music player and press play, it plays music. When you point it at a game console and press play, it starts a game. It's the same button doing the same action ("play"), but each device responds differently! Polymorphism in programming is just like this - the same action can work differently depending on what object you're using it with.
 
-```python
-# Same method name, different behaviors
-class TV:
-    def play(self):
-        print("📺 Playing TV show...")
+```csharp
+// Same method name, different behaviors
+public class TV
+{
+    public void Play()
+    {
+        Console.WriteLine("📺 Playing TV show...");
+    }
+}
 
-class MusicPlayer:
-    def play(self):
-        print("🎵 Playing music...")
+public class MusicPlayer
+{
+    public void Play()
+    {
+        Console.WriteLine("🎵 Playing music...");
+    }
+}
 
-class GameConsole:
-    def play(self):
-        print("🎮 Starting game...")
+public class GameConsole
+{
+    public void Play()
+    {
+        Console.WriteLine("🎮 Starting game...");
+    }
+}
 
-# Same remote control works with all devices!
-def use_remote_control(device):
-    print("Pressing PLAY button...")
-    device.play()  # Same method call, different behavior!
+// Same remote control works with all devices!
+public static void UseRemoteControl(dynamic device)
+{
+    Console.WriteLine("Pressing PLAY button...");
+    device.Play();  // Same method call, different behavior!
+}
 
-# All work with the same interface
-tv = TV()
-music = MusicPlayer()
-game = GameConsole()
+// All work with the same interface
+var tv = new TV();
+var music = new MusicPlayer();
+var game = new GameConsole();
 
-use_remote_control(tv)     # 📺 Playing TV show...
-use_remote_control(music)  # 🎵 Playing music...
-use_remote_control(game)   # 🎮 Starting game...
+UseRemoteControl(tv);     // 📺 Playing TV show...
+UseRemoteControl(music);  // 🎵 Playing music...
+UseRemoteControl(game);   // 🎮 Starting game...
 ```
 
 ## Developer-Level Explanation
@@ -114,83 +128,118 @@ ProcessShapes(shapes);  // Works with any shape type!
 
 ### Interface-Based Polymorphism: Multiple Contracts
 
-```python
-from abc import ABC, abstractmethod
+```csharp
+// Multiple interfaces that objects can implement
+public interface IDrawable
+{
+    void Draw();
+}
 
-# Multiple interfaces that objects can implement
-class Drawable(ABC):
-    @abstractmethod
-    def draw(self):
-        pass
+public interface IMovable
+{
+    void Move(int x, int y);
+}
 
-class Movable(ABC):
-    @abstractmethod
-    def move(self, x, y):
-        pass
+public interface IResizable
+{
+    void Resize(double factor);
+}
 
-class Resizable(ABC):
-    @abstractmethod
-    def resize(self, factor):
-        pass
-
-# Objects can implement multiple interfaces
-class GameSprite(Drawable, Movable, Resizable):
-    def __init__(self, name, x=0, y=0, size=1):
-        self.name = name
-        self.x = x
-        self.y = y
-        self.size = size
+// Objects can implement multiple interfaces
+public class GameSprite : IDrawable, IMovable, IResizable
+{
+    protected string name;
+    protected int x, y;
+    protected double size;
     
-    def draw(self):
-        print(f"Drawing {self.name} at ({self.x}, {self.y}) with size {self.size}")
+    public GameSprite(string name, int x = 0, int y = 0, double size = 1)
+    {
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.size = size;
+    }
     
-    def move(self, x, y):
-        self.x += x
-        self.y += y
-        print(f"{self.name} moved to ({self.x}, {self.y})")
+    public virtual void Draw()
+    {
+        Console.WriteLine($"Drawing {name} at ({x}, {y}) with size {size}");
+    }
     
-    def resize(self, factor):
-        self.size *= factor
-        print(f"{self.name} resized to {self.size}")
-
-class Player(GameSprite):
-    def __init__(self, name, health=100):
-        super().__init__(name)
-        self.health = health
+    public virtual void Move(int deltaX, int deltaY)
+    {
+        x += deltaX;
+        y += deltaY;
+        Console.WriteLine($"{name} moved to ({x}, {y})");
+    }
     
-    def draw(self):  # Override with player-specific drawing
-        print(f"🏃 Drawing player {self.name} (HP: {self.health}) at ({self.x}, {self.y})")
+    public virtual void Resize(double factor)
+    {
+        size *= factor;
+        Console.WriteLine($"{name} resized to {size}");
+    }
+}
 
-class Enemy(GameSprite):
-    def __init__(self, name, damage=10):
-        super().__init__(name)
-        self.damage = damage
+public class Player : GameSprite
+{
+    private int health;
     
-    def draw(self):  # Override with enemy-specific drawing
-        print(f"👹 Drawing enemy {self.name} (DMG: {self.damage}) at ({self.x}, {self.y})")
+    public Player(string name, int health = 100) : base(name)
+    {
+        this.health = health;
+    }
+    
+    public override void Draw()  // Override with player-specific drawing
+    {
+        Console.WriteLine($"🏃 Drawing player {name} (HP: {health}) at ({x}, {y})");
+    }
+}
 
-# Polymorphic functions work with any object implementing the interface
-def render_all(drawables: list[Drawable]):
-    for drawable in drawables:
-        drawable.draw()  # Calls the appropriate draw method
+public class Enemy : GameSprite
+{
+    private int damage;
+    
+    public Enemy(string name, int damage = 10) : base(name)
+    {
+        this.damage = damage;
+    }
+    
+    public override void Draw()  // Override with enemy-specific drawing
+    {
+        Console.WriteLine($"👹 Drawing enemy {name} (DMG: {damage}) at ({x}, {y})");
+    }
+}
 
-def move_all(movables: list[Movable], dx, dy):
-    for movable in movables:
-        movable.move(dx, dy)  # Calls the appropriate move method
+// Polymorphic functions work with any object implementing the interface
+public static void RenderAll(List<IDrawable> drawables)
+{
+    foreach (var drawable in drawables)
+    {
+        drawable.Draw();  // Calls the appropriate draw method
+    }
+}
 
-# Usage - polymorphism in action
-game_objects = [
-    Player("Hero"),
-    Enemy("Goblin"),
-    Enemy("Orc"),
-    GameSprite("Treasure Chest")
-]
+public static void MoveAll(List<IMovable> movables, int dx, int dy)
+{
+    foreach (var movable in movables)
+    {
+        movable.Move(dx, dy);  // Calls the appropriate move method
+    }
+}
 
-print("=== Rendering all objects ===")
-render_all(game_objects)  # Works with any Drawable object
+// Usage - polymorphism in action
+var gameObjects = new List<GameSprite>
+{
+    new Player("Hero"),
+    new Enemy("Goblin"),
+    new Enemy("Orc"),
+    new GameSprite("Treasure Chest")
+};
 
-print("\n=== Moving all objects ===")
-move_all(game_objects, 5, 3)  # Works with any Movable object
+Console.WriteLine("=== Rendering all objects ===");
+RenderAll(gameObjects.Cast<IDrawable>().ToList());  // Works with any Drawable object
+
+Console.WriteLine("\n=== Moving all objects ===");
+MoveAll(gameObjects.Cast<IMovable>().ToList(), 5, 3);  // Works with any Movable object
 ```
 
 ### Method Overloading vs Overriding: Compile vs Runtime Polymorphism
@@ -271,127 +320,142 @@ foreach (Animal animal in animals)
 
 ### Polymorphic Collections: Working with Mixed Types
 
-```cpp
-#include <vector>
-#include <memory>
-#include <iostream>
+```csharp
+public abstract class Document 
+{
+    protected string title;
+    
+    public Document(string title) 
+    {
+        this.title = title;
+    }
+    
+    public abstract void Open();  // Must be implemented
+    public abstract void Save();  // Must be implemented
+    
+    public virtual void Print() 
+    {
+        Console.WriteLine($"Printing document: {title}");
+    }
+    
+    public string GetTitle() => title;
+}
 
-class Document {
-protected:
-    std::string title;
+public class TextDocument : Document 
+{
+    public TextDocument(string title) : base(title) { }
     
-public:
-    Document(const std::string& title) : title(title) {}
-    virtual ~Document() = default;  // Important for polymorphism!
-    
-    virtual void open() = 0;  // Pure virtual
-    virtual void save() = 0;  // Pure virtual
-    virtual void print() {
-        std::cout << "Printing document: " << title << std::endl;
+    public override void Open() 
+    {
+        Console.WriteLine($"📄 Opening text document: {title}");
     }
     
-    const std::string& getTitle() const { return title; }
-};
+    public override void Save() 
+    {
+        Console.WriteLine($"💾 Saving text document: {title}");
+    }
+    
+    public override void Print() 
+    {
+        Console.WriteLine($"🖨️ Printing text document: {title} (plain text)");
+    }
+}
 
-class TextDocument : public Document {
-public:
-    TextDocument(const std::string& title) : Document(title) {}
+public class SpreadsheetDocument : Document 
+{
+    public SpreadsheetDocument(string title) : base(title) { }
     
-    void open() override {
-        std::cout << "📄 Opening text document: " << title << std::endl;
+    public override void Open() 
+    {
+        Console.WriteLine($"📊 Opening spreadsheet: {title}");
     }
     
-    void save() override {
-        std::cout << "💾 Saving text document: " << title << std::endl;
+    public override void Save() 
+    {
+        Console.WriteLine($"💾 Saving spreadsheet: {title} (with formulas)");
     }
     
-    void print() override {
-        std::cout << "🖨️ Printing text document: " << title << " (plain text)" << std::endl;
+    public override void Print() 
+    {
+        Console.WriteLine($"🖨️ Printing spreadsheet: {title} (with grid lines)");
     }
-};
+}
 
-class SpreadsheetDocument : public Document {
-public:
-    SpreadsheetDocument(const std::string& title) : Document(title) {}
+public class PresentationDocument : Document 
+{
+    public PresentationDocument(string title) : base(title) { }
     
-    void open() override {
-        std::cout << "📊 Opening spreadsheet: " << title << std::endl;
+    public override void Open() 
+    {
+        Console.WriteLine($"🎞️ Opening presentation: {title}");
     }
     
-    void save() override {
-        std::cout << "💾 Saving spreadsheet: " << title << " (with formulas)" << std::endl;
+    public override void Save() 
+    {
+        Console.WriteLine($"💾 Saving presentation: {title} (with slides)");
     }
     
-    void print() override {
-        std::cout << "🖨️ Printing spreadsheet: " << title << " (with grid lines)" << std::endl;
+    public override void Print() 
+    {
+        Console.WriteLine($"🖨️ Printing presentation: {title} (slide handouts)");
     }
-};
-
-class PresentationDocument : public Document {
-public:
-    PresentationDocument(const std::string& title) : Document(title) {}
-    
-    void open() override {
-        std::cout << "🎞️ Opening presentation: " << title << std::endl;
-    }
-    
-    void save() override {
-        std::cout << "💾 Saving presentation: " << title << " (with slides)" << std::endl;
-    }
-    
-    void print() override {
-        std::cout << "🖨️ Printing presentation: " << title << " (slide handouts)" << std::endl;
-    }
-};
+}
 
 // Document Manager works with any type of document
-class DocumentManager {
-private:
-    std::vector<std::unique_ptr<Document>> documents;
+public class DocumentManager 
+{
+    private List<Document> documents = new List<Document>();
     
-public:
-    void addDocument(std::unique_ptr<Document> doc) {
-        documents.push_back(std::move(doc));
+    public void AddDocument(Document doc) 
+    {
+        documents.Add(doc);
     }
     
-    void openAll() {
-        std::cout << "\n=== Opening all documents ===" << std::endl;
-        for (auto& doc : documents) {
-            doc->open();  // Polymorphic call
+    public void OpenAll() 
+    {
+        Console.WriteLine("\n=== Opening all documents ===");
+        foreach (var doc in documents) 
+        {
+            doc.Open();  // Polymorphic call
         }
     }
     
-    void saveAll() {
-        std::cout << "\n=== Saving all documents ===" << std::endl;
-        for (auto& doc : documents) {
-            doc->save();  // Polymorphic call
+    public void SaveAll() 
+    {
+        Console.WriteLine("\n=== Saving all documents ===");
+        foreach (var doc in documents) 
+        {
+            doc.Save();  // Polymorphic call
         }
     }
     
-    void printAll() {
-        std::cout << "\n=== Printing all documents ===" << std::endl;
-        for (auto& doc : documents) {
-            doc->print();  // Polymorphic call - each type prints differently!
+    public void PrintAll() 
+    {
+        Console.WriteLine("\n=== Printing all documents ===");
+        foreach (var doc in documents) 
+        {
+            doc.Print();  // Polymorphic call - each type prints differently!
         }
     }
-};
+}
 
 // Usage - manager works with any document type
-DocumentManager manager;
-manager.addDocument(std::make_unique<TextDocument>("Meeting Notes"));
-manager.addDocument(std::make_unique<SpreadsheetDocument>("Budget 2024"));
-manager.addDocument(std::make_unique<PresentationDocument>("Sales Pitch"));
+var manager = new DocumentManager();
+manager.AddDocument(new TextDocument("Meeting Notes"));
+manager.AddDocument(new SpreadsheetDocument("Budget 2024"));
+manager.AddDocument(new PresentationDocument("Sales Pitch"));
 
-manager.openAll();   // Each document opens in its own way
-manager.saveAll();   // Each document saves in its own way  
-manager.printAll();  // Each document prints in its own way
+manager.OpenAll();   // Each document opens in its own way
+manager.SaveAll();   // Each document saves in its own way  
+manager.PrintAll();  // Each document prints in its own way
 ```
+
+**Code Explanation:**
+This demonstrates **polymorphic collections** where a single `DocumentManager` class can handle different document types (`TextDocument`, `SpreadsheetDocument`, `PresentationDocument`) uniformly. Each document type overrides the abstract methods with its own specific behavior, but the manager treats them all as `Document` objects. This shows how polymorphism enables **flexible collection handling** and **type-safe operations** across diverse object types.
 
 ## Code Examples
 
 The following examples demonstrate polymorphism with practical scenarios showing how different objects can be treated uniformly while maintaining their specific behaviors.
-- C++: `g++ -std=c++17 chapter-05-basic.cpp -o chapter-05-basic && .\chapter-05-basic.exe`
-- Python: `python chapter-05-basic.py`
 
 **Expected Output:**
 ```
@@ -409,19 +473,9 @@ Drawing a triangle with base 3, height 4
 
 ### Intermediate Example
 
-**How to run:**
-- C#: `csc chapter-05-intermediate.cs && .\chapter-05-intermediate.exe`
-- C++: `g++ -std=c++17 chapter-05-intermediate.cpp -o chapter-05-intermediate && .\chapter-05-intermediate.exe`
-- Python: `python chapter-05-intermediate.py`
-
 **Expected Output:** Shows different payment methods being processed through the same interface.
 
 ### Advanced Example
-
-**How to run:**
-- C#: `csc chapter-05-advanced.cs && .\chapter-05-advanced.exe`
-- C++: `g++ -std=c++17 chapter-05-advanced.cpp -o chapter-05-advanced && .\chapter-05-advanced.exe`
-- Python: `python chapter-05-advanced.py`
 
 **Why this advanced solution demonstrates excellent polymorphism:**
 - **Interface Polymorphism**: Multiple interfaces allow objects to be polymorphic in different contexts

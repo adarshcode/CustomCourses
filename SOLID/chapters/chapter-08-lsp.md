@@ -3,43 +3,71 @@
 ## Child-Friendly Explanation
 Imagine you have a toy box, and someone tells you "put any kind of ball in this box." You should be able to put a soccer ball, basketball, tennis ball, or any other ball in there, and the box should work just fine with all of them. The Liskov Substitution Principle is like this - if your code is designed to work with a "parent" type, it should work perfectly with any "child" type too, without any surprises or problems!
 
-```python
-# All balls should work the same way in our toy box
-class Ball:
-    def __init__(self, size):
-        self.size = size
+```csharp
+// All balls should work the same way in our toy box
+public class Ball
+{
+    protected int size;
     
-    def bounce(self):
-        print(f"Ball bouncing to height {self.size * 2}")
+    public Ball(int size)
+    {
+        this.size = size;
+    }
     
-    def roll(self):
-        print(f"Ball rolling {self.size * 3} meters")
-
-class SoccerBall(Ball):
-    def bounce(self):
-        print(f"Soccer ball bouncing to height {self.size * 2}")  # Same behavior!
+    public virtual void Bounce()
+    {
+        Console.WriteLine($"Ball bouncing to height {size * 2}");
+    }
     
-    def roll(self):
-        print(f"Soccer ball rolling {self.size * 3} meters")  # Same behavior!
+    public virtual void Roll()
+    {
+        Console.WriteLine($"Ball rolling {size * 3} meters");
+    }
+}
 
-class Basketball(Ball):
-    def bounce(self):
-        print(f"Basketball bouncing to height {self.size * 2}")  # Same behavior!
+public class SoccerBall : Ball
+{
+    public SoccerBall(int size) : base(size) { }
     
-    def roll(self):
-        print(f"Basketball rolling {self.size * 3} meters")  # Same behavior!
+    public override void Bounce()
+    {
+        Console.WriteLine($"Soccer ball bouncing to height {size * 2}");  // Same behavior!
+    }
+    
+    public override void Roll()
+    {
+        Console.WriteLine($"Soccer ball rolling {size * 3} meters");  // Same behavior!
+    }
+}
 
-# This toy box works with ANY ball - no surprises!
-def play_with_ball(ball: Ball):
-    ball.bounce()  # Works with any ball type
-    ball.roll()    # Works with any ball type
+public class Basketball : Ball
+{
+    public Basketball(int size) : base(size) { }
+    
+    public override void Bounce()
+    {
+        Console.WriteLine($"Basketball bouncing to height {size * 2}");  // Same behavior!
+    }
+    
+    public override void Roll()
+    {
+        Console.WriteLine($"Basketball rolling {size * 3} meters");  // Same behavior!
+    }
+}
 
-# All balls work perfectly in the same toy box
-soccer = SoccerBall(5)
-basketball = Basketball(6)
+// This toy box works with ANY ball - no surprises!
+public static void PlayWithBall(Ball ball)
+{
+    ball.Bounce();  // Works with any ball type
+    ball.Roll();    // Works with any ball type
+}
 
-play_with_ball(soccer)     # Works perfectly
-play_with_ball(basketball) # Works perfectly too!
+// All balls work perfectly in the same toy box
+var soccer = new SoccerBall(5);
+var basketball = new Basketball(6);
+
+PlayWithBall(soccer);     // Works perfectly
+PlayWithBall(basketball); // Works perfectly too!
 ```
 
 ## Developer-Level Explanation
@@ -148,133 +176,174 @@ MoveBird(penguin);  // Penguin waddling adorably
 ### Contract Compliance: Preconditions and Postconditions
 
 **Violating LSP with Strengthened Preconditions:**
-```python
-class FileReader:
-    def read_file(self, filename):
-        # Base class: any valid filename is acceptable
-        if not filename:
-            raise ValueError("Filename cannot be empty")
+```csharp
+public class FileReader
+{
+    public virtual string ReadFile(string filename)
+    {
+        // Base class: any valid filename is acceptable
+        if (string.IsNullOrEmpty(filename))
+        {
+            throw new ArgumentException("Filename cannot be empty");
+        }
         
-        print(f"Reading file: {filename}")
-        return f"Contents of {filename}"
+        Console.WriteLine($"Reading file: {filename}");
+        return $"Contents of {filename}";
+    }
+}
 
-class SecureFileReader(FileReader):
-    def read_file(self, filename):
-        # VIOLATION: Strengthening preconditions (more restrictive)
-        if not filename:
-            raise ValueError("Filename cannot be empty")
+public class SecureFileReader : FileReader
+{
+    public override string ReadFile(string filename)
+    {
+        // VIOLATION: Strengthening preconditions (more restrictive)
+        if (string.IsNullOrEmpty(filename))
+        {
+            throw new ArgumentException("Filename cannot be empty");
+        }
         
-        if not filename.endswith('.secure'):
-            raise ValueError("Can only read .secure files")  # BREAKS LSP!
+        if (!filename.EndsWith(".secure"))
+        {
+            throw new ArgumentException("Can only read .secure files");  // BREAKS LSP!
+        }
         
-        if len(filename) < 10:
-            raise ValueError("Secure filenames must be at least 10 chars")  # BREAKS LSP!
+        if (filename.Length < 10)
+        {
+            throw new ArgumentException("Secure filenames must be at least 10 chars");  // BREAKS LSP!
+        }
         
-        print(f"Reading secure file: {filename}")
-        return f"Secure contents of {filename}"
+        Console.WriteLine($"Reading secure file: {filename}");
+        return $"Secure contents of {filename}";
+    }
+}
 
-# This breaks because SecureFileReader is MORE restrictive than FileReader
-def process_files(reader: FileReader, filenames):
-    for filename in filenames:
-        try:
-            content = reader.read_file(filename)  # May break with SecureFileReader!
-            print(f"✅ Successfully read: {filename}")
-        except ValueError as e:
-            print(f"❌ Failed to read {filename}: {e}")
+// This breaks because SecureFileReader is MORE restrictive than FileReader
+public static void ProcessFiles(FileReader reader, string[] filenames)
+{
+    foreach (var filename in filenames)
+    {
+        try
+        {
+            var content = reader.ReadFile(filename);  // May break with SecureFileReader!
+            Console.WriteLine($"✅ Successfully read: {filename}");
+        }
+        catch (ArgumentException e)
+        {
+            Console.WriteLine($"❌ Failed to read {filename}: {e.Message}");
+        }
+    }
+}
 
-# Usage shows the violation
-files = ["document.txt", "data.csv", "config.json"]
+// Usage shows the violation
+var files = new[] { "document.txt", "data.csv", "config.json" };
 
-print("=== Using base FileReader ===")
-base_reader = FileReader()
-process_files(base_reader, files)  # Works fine
+Console.WriteLine("=== Using base FileReader ===");
+var baseReader = new FileReader();
+ProcessFiles(baseReader, files);  // Works fine
 
-print("\n=== Using SecureFileReader (LSP Violation) ===")
-secure_reader = SecureFileReader()
-process_files(secure_reader, files)  # Breaks! More restrictive than base class
+Console.WriteLine("\n=== Using SecureFileReader (LSP Violation) ===");
+var secureReader = new SecureFileReader();
+ProcessFiles(secureReader, files);  // Breaks! More restrictive than base class
 ```
 
 **Following LSP with Proper Contract Design:**
-```python
-from abc import ABC, abstractmethod
-
-class FileReader(ABC):
-    @abstractmethod
-    def can_read(self, filename: str) -> bool:
-        """Check if this reader can handle the file"""
-        pass
+```csharp
+public abstract class FileReader
+{
+    public abstract bool CanRead(string filename);  // Check if this reader can handle the file
     
-    @abstractmethod
-    def read_file(self, filename: str) -> str:
-        """Read file if can_read returns True"""
-        pass
+    public abstract string ReadFile(string filename);  // Read file if CanRead returns True
+}
 
-class TextFileReader(FileReader):
-    def can_read(self, filename: str) -> bool:
-        return filename.endswith(('.txt', '.csv', '.json'))
+public class TextFileReader : FileReader
+{
+    public override bool CanRead(string filename)
+    {
+        return filename.EndsWith(".txt") || filename.EndsWith(".csv") || filename.EndsWith(".json");
+    }
     
-    def read_file(self, filename: str) -> str:
-        if not self.can_read(filename):
-            raise ValueError(f"Cannot read {filename} with TextFileReader")
-        print(f"Reading text file: {filename}")
-        return f"Text contents of {filename}"
+    public override string ReadFile(string filename)
+    {
+        if (!CanRead(filename))
+        {
+            throw new ArgumentException($"Cannot read {filename} with TextFileReader");
+        }
+        Console.WriteLine($"Reading text file: {filename}");
+        return $"Text contents of {filename}";
+    }
+}
 
-class SecureFileReader(FileReader):
-    def can_read(self, filename: str) -> bool:
-        return filename.endswith('.secure') and len(filename) >= 10
+public class SecureFileReader : FileReader
+{
+    public override bool CanRead(string filename)
+    {
+        return filename.EndsWith(".secure") && filename.Length >= 10;
+    }
     
-    def read_file(self, filename: str) -> str:
-        if not self.can_read(filename):
-            raise ValueError(f"Cannot read {filename} with SecureFileReader")
-        print(f"Reading secure file: {filename}")
-        return f"Secure contents of {filename}"
+    public override string ReadFile(string filename)
+    {
+        if (!CanRead(filename))
+        {
+            throw new ArgumentException($"Cannot read {filename} with SecureFileReader");
+        }
+        Console.WriteLine($"Reading secure file: {filename}");
+        return $"Secure contents of {filename}";
+    }
+}
 
-# Now the contract is clear and substitution works
-def process_files_safely(readers: list[FileReader], filenames: list[str]):
-    for filename in filenames:
-        print(f"\nProcessing: {filename}")
+// Now the contract is clear and substitution works
+public static void ProcessFilesSafely(List<FileReader> readers, string[] filenames)
+{
+    foreach (var filename in filenames)
+    {
+        Console.WriteLine($"\nProcessing: {filename}");
         
-        # Find a reader that can handle this file
-        handled = False
-        for reader in readers:
-            if reader.can_read(filename):
-                try:
-                    content = reader.read_file(filename)
-                    print(f"✅ Read with {reader.__class__.__name__}")
-                    handled = True
-                    break
-                except ValueError as e:
-                    print(f"❌ Error: {e}")
+        // Find a reader that can handle this file
+        bool handled = false;
+        foreach (var reader in readers)
+        {
+            if (reader.CanRead(filename))
+            {
+                try
+                {
+                    var content = reader.ReadFile(filename);
+                    Console.WriteLine($"✅ Read with {reader.GetType().Name}");
+                    handled = true;
+                    break;
+                }
+                catch (ArgumentException e)
+                {
+                    Console.WriteLine($"❌ Error: {e.Message}");
+                }
+            }
+        }
         
-        if not handled:
-            print(f"⚠️ No reader available for {filename}")
+        if (!handled)
+        {
+            Console.WriteLine($"⚠️ No reader available for {filename}");
+        }
+    }
+}
 
-# Usage - LSP compliant
-files = ["document.txt", "secret.secure", "verylongname.secure", "data.csv"]
-readers = [TextFileReader(), SecureFileReader()]
+// Usage - LSP compliant
+var files = new[] { "document.txt", "secret.secure", "verylongname.secure", "data.csv" };
+var readers = new List<FileReader> { new TextFileReader(), new SecureFileReader() };
 
-process_files_safely(readers, files)  # Works correctly with all readers
+ProcessFilesSafely(readers, files);  // Works correctly with all readers
 ```
 
 ### Real-World LSP: Database Connections
 
 **LSP Compliant Database Design:**
-```cpp
-#include <iostream>
-#include <string>
-#include <vector>
-#include <memory>
-
-class DatabaseConnection {
-public:
-    virtual ~DatabaseConnection() = default;
-    
+```csharp
+public abstract class DatabaseConnection
+{
     // Contract: All subclasses must be able to execute basic queries
-    virtual bool connect() = 0;
-    virtual void disconnect() = 0;
-    virtual std::vector<std::string> executeQuery(const std::string& query) = 0;
-    virtual bool isConnected() const = 0;
-};
+    public abstract bool Connect();
+    public abstract void Disconnect();
+    public abstract List<string> ExecuteQuery(string query);
+    public abstract bool IsConnected { get; }
+}
 
 // MySQL implementation follows the contract
 class MySQLConnection : public DatabaseConnection {
@@ -394,11 +463,6 @@ int main() {
 ## Code Examples
 
 The following examples demonstrate LSP compliance through proper inheritance design and contract adherence.
-
-**How to run:**
-- C#: `csc chapter-08-advanced.cs && .\chapter-08-advanced.exe`
-- C++: `g++ -std=c++17 chapter-08-advanced.cpp -o chapter-08-advanced && .\chapter-08-advanced.exe`
-- Python: `python chapter-08-advanced.py`
 
 **Why this advanced solution follows LSP:**
 - **Contract-Based Design**: All implementations honor the same contracts

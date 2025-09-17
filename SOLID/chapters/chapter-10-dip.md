@@ -20,16 +20,28 @@ The Dependency Inversion Principle is like making your toy car work with ANY typ
 
 In programming, instead of your code depending on specific classes, it should depend on "contracts" (interfaces) that describe what something can do.
 
-```python
-# Bad: Toy car only works with SpecificBattery
-class ToyCar:
-    def __init__(self):
-        self.battery = SpecificBattery()  # Too specific!
+```csharp
+// Bad: Toy car only works with SpecificBattery
+public class ToyCar
+{
+    private SpecificBattery battery;
+    
+    public ToyCar()
+    {
+        battery = new SpecificBattery();  // Too specific!
+    }
+}
 
-# Good: Toy car works with any battery that provides power
-class ToyCar:
-    def __init__(self, battery: PowerSource):
-        self.battery = battery  # Any power source works!
+// Good: Toy car works with any battery that provides power
+public class ToyCar
+{
+    private IPowerSource battery;
+    
+    public ToyCar(IPowerSource battery)
+    {
+        this.battery = battery;  // Any power source works!
+    }
+}
 ```
 
 ---
@@ -328,4 +340,4 @@ The Dependency Inversion Principle is the foundation of testable, maintainable, 
 
 ---
 
-**Next Chapter:** [Chapter 11: Design Patterns Introduction](./chapter-11-design-patterns.md)
+**Next Chapter:** [Chapter 11: Essential Design Patterns](./chapter-11-design-patterns.md)
