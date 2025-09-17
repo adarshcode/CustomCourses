@@ -92,6 +92,9 @@ public class Volunteer : IWorkable, IEatable, ISleepable  // No salary
 }
 ```
 
+**Code Explanation:**
+The ISP violation forces `Robot` to implement `Eat()` and `Sleep()` methods it can't meaningfully support, leading to exceptions. The ISP-compliant design breaks the large interface into focused, role-specific interfaces. Now `Human` implements all four interfaces because humans have all these capabilities, `Robot` only implements `IWorkable` because that's all it can do, and `Volunteer` implements three interfaces because volunteers don't get paid but can work, eat, and sleep. Each class only depends on the interfaces it actually needs.
+
 ## Code Examples
 
 ### C# Example

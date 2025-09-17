@@ -40,9 +40,12 @@ The course follows a systematic progression through 16 carefully crafted chapter
 
 ## Prerequisites
 
-- Basic programming knowledge in any language
-- Understanding of variables, functions, and basic control structures
-- Familiarity with command-line tools for compiling/running programs
+- **Intermediate programming knowledge** in C#, Java, Python, or similar OOP language
+- **Experience with classes and objects** - you should be comfortable creating and using classes
+- **Understanding of basic OOP concepts** like inheritance and method overriding
+- **Familiarity with interfaces or abstract classes** (helpful but not required)
+- **Basic knowledge of software development** - you've built applications before
+- **.NET SDK 6.0 or later** for running C# examples
 - Basic C# syntax knowledge (variables, methods, classes) is helpful but not required
 
 ## Required Tools
@@ -83,13 +86,13 @@ csc chapter-01.cs
 
 ## Study Paths
 
-### Absolute Beginners
-Start with Chapter 1 and work through sequentially. Focus on understanding the concepts before diving into complex examples.
+### New to SOLID Principles
+Start with Chapter 1 for OOP review, then work through sequentially. Focus on understanding design principles and recognizing code smells.
 
-### Intermediate Developers  
-If you know basic OOP, you can start with Chapter 6 (SOLID principles). Review earlier chapters if needed for C# syntax.
+### Experienced Developers  
+If you know OOP well, you can start with Chapter 6 (SOLID principles). Review earlier chapters for C# syntax and advanced examples.
 
-### Interview Preparation
+### System Design Interview Preparation
 Focus on Chapters 6-12 for design principles and patterns. Chapters 15-16 are excellent for discussing code quality.
 
 ## Getting Help

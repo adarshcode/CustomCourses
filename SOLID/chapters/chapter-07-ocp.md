@@ -186,6 +186,9 @@ processor.ProcessPayment(new PayPalPayment(), 200);
 processor.ProcessPayment(new BitcoinPayment(), 300);  // NEW! But no existing code changed
 ```
 
+**Code Explanation:**
+This payment system perfectly demonstrates OCP. The `PaymentMethod` abstract class provides the extension point, while the `PaymentProcessor` class is closed for modification. When we added `BitcoinPayment`, we didn't change a single line in `PaymentProcessor` or any existing payment classes. The system automatically works with the new payment type because it follows the same contract. This is the power of OCP - new functionality through extension, not modification.
+
 ### Plugin Architecture: Ultimate OCP Example
 
 ```csharp
@@ -317,6 +320,9 @@ public static void Main()
     engine.ProcessAllData("sample data");
 }
 ```
+
+**Code Explanation:**
+This plugin architecture shows OCP at its finest. The `DataProcessingEngine` is completely closed for modification - it has never been changed since v1.0. Yet we've extended it through three major versions by adding new processor plugins. Each processor implements the `IDataProcessor` interface, making them compatible with the engine. Notice how we went from 2 processors to 5 processors without touching the core engine code. This is how real-world systems achieve scalability while maintaining stability.
 
 ### Strategy Pattern: OCP in Action
 
@@ -497,16 +503,22 @@ public class LZ4Compression : ICompressionStrategy  // BRAND NEW!
     }
     
     public string Decompress(string compressedData)
-        return compressed_data.replace("LZ4[", "").replace("]", "")
+    {
+        return compressedData.Replace("LZ4[", "").Replace("]", "");
+    }
     
-    def get_name(self) -> str:
-        return "LZ4 Fast Compression"
+    public string GetName()
+    {
+        return "LZ4 Fast Compression";
+    }
+}
 
-# Just add to factory - no other code changes needed!
-# CompressionFactory can be extended to include "lz4": LZ4Compression()
-
-demonstrate_ocp()
+// Just add to factory - no other code changes needed!
+// CompressionFactory can be extended to include "lz4": new LZ4Compression()
 ```
+
+**Code Explanation:**
+This strategy pattern example perfectly demonstrates OCP in action. The `FileCompressor` class is completely closed for modification - it never needs to change when new compression algorithms are added. We've extended the system from 2 compression types to 5 types without touching the core compressor logic. Each new strategy implements the `ICompressionStrategy` interface, making it instantly compatible with the existing system. The factory pattern makes it easy to manage strategy creation, and the runtime strategy switching shows the flexibility that OCP enables.
 
 ## Code Examples
 

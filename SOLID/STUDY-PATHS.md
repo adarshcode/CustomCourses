@@ -2,56 +2,47 @@
 
 Choose the study path that best matches your current experience level and learning goals.
 
-## For Absolute Beginners (New to Programming or OOP)
+## For Developers New to SOLID Principles
 
-**Recommended Timeline**: 8-12 weeks (1-2 chapters per week)
+**Recommended Timeline**: 6-8 weeks (2 chapters per week)
 
-### Phase 1: Foundation (Weeks 1-3)
+### Phase 1: OOP Foundation Review (Weeks 1-2)
 1. **Chapter 1**: What is Object-Oriented Programming?
-   - Start with basic examples only
-   - Practice creating simple classes
-   - Focus on understanding objects vs. classes
+   - Quick review of OOP concepts with focus on design quality
+   - Practice identifying good vs. poor OOP design
 
 2. **Chapter 2**: Encapsulation
-   - Master private/public access modifiers
-   - Practice with basic examples
-   - Understand why data protection matters
+   - Advanced encapsulation patterns
+   - Data protection and access control strategies
 
 3. **Chapter 3**: Abstraction
-   - Learn to hide complexity
-   - Focus on interface vs. implementation
-   - Practice with simple abstraction examples
+   - Interface design principles
+   - Hiding complexity in real systems
 
-### Phase 2: Core OOP (Weeks 4-6)
 4. **Chapter 4**: Inheritance
-   - Start with basic inheritance examples
-   - Understand "is-a" relationships
-   - Practice creating class hierarchies
+   - Proper inheritance hierarchies
+   - When to use composition vs. inheritance
 
 5. **Chapter 5**: Polymorphism
-   - Begin with method overriding
-   - Understand runtime polymorphism
-   - Work through intermediate examples
+   - Advanced polymorphism patterns
+   - Runtime behavior switching
 
-6. **Review and Practice**
-   - Go back and try intermediate examples from Chapters 1-5
-   - Complete all exercises from these chapters
+### Phase 2: SOLID Principles Deep Dive (Weeks 3-5)
+6. **Chapter 6**: Single Responsibility Principle
+7. **Chapter 7**: Open/Closed Principle
+8. **Chapter 8**: Liskov Substitution Principle
+9. **Chapter 9**: Interface Segregation Principle
+10. **Chapter 10**: Dependency Inversion Principle
 
-### Phase 3: SOLID Principles (Weeks 7-10)
-7. **Chapter 6**: Single Responsibility Principle
-8. **Chapter 13**: KISS, YAGNI, DRY (easier concepts)
-9. **Chapter 7**: Open/Closed Principle
-10. **Chapter 8**: Liskov Substitution Principle
-11. **Chapter 9**: Interface Segregation Principle
-12. **Chapter 10**: Dependency Inversion Principle
+*Complete all exercises and focus on recognizing violations in existing code*
 
-### Phase 4: Clean Practices (Weeks 11-12)
-13. **Chapter 14**: Clean Code Basics
-14. **Chapter 15**: Testing & TDD Basics
-15. **Chapter 16**: Refactoring
-16. **Chapter 12**: SOLID in Practice (if time permits)
-
-**Skip for now**: Chapter 11 (Design Patterns) - return to this after gaining more experience
+### Phase 3: Design Patterns & Practices (Weeks 6-8)
+11. **Chapter 11**: Essential Design Patterns
+12. **Chapter 12**: SOLID in Practice
+13. **Chapter 13**: KISS, YAGNI, DRY
+14. **Chapter 14**: Clean Code Basics
+15. **Chapter 15**: Testing & TDD
+16. **Chapter 16**: Refactoring
 
 ---
 

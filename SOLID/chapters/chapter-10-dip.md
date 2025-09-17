@@ -227,6 +227,9 @@ var notificationService = new NotificationService(notificationSenders);
 notificationService.SendUrgentNotification("Server is down!");
 ```
 
+**Code Explanation:**
+The DIP violation creates tight coupling between `NotificationService` and specific sender implementations. Adding new notification methods requires modifying the service class. The DIP-compliant version inverts the dependency - `NotificationService` depends on the `INotificationSender` abstraction, and concrete senders depend on the same abstraction. This enables easy extension (add new senders), testing (inject mocks), and configuration flexibility. The business logic remains pure and focused on orchestration rather than implementation details.
+
 ### Common DIP Patterns
 
 #### 1. Constructor Injection

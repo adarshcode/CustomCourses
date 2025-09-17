@@ -173,6 +173,9 @@ MoveBird(eagle);    // Eagle soaring majestically
 MoveBird(penguin);  // Penguin waddling adorably
 ```
 
+**Code Explanation:**
+The first example violates LSP because `Penguin` can't substitute for `Bird` without breaking functionality - calling `Fly()` on a penguin throws an exception. The improved design follows LSP by creating proper inheritance hierarchies. `FlyingBird` and `GroundBird` both inherit from `Bird` and can be substituted anywhere a `Bird` is expected. The `Move()` method provides consistent behavior across all bird types, ensuring that substitution works without surprises.
+
 ### Contract Compliance: Preconditions and Postconditions
 
 **Violating LSP with Strengthened Preconditions:**
@@ -331,6 +334,9 @@ var readers = new List<FileReader> { new TextFileReader(), new SecureFileReader(
 
 ProcessFilesSafely(readers, files);  // Works correctly with all readers
 ```
+
+**Code Explanation:**
+The first file reader example violates LSP because `SecureFileReader` strengthens the preconditions (requires .secure extension), making it more restrictive than the base class. This breaks substitution. The improved design follows LSP by explicitly defining capabilities through the `CanRead()` method. Now each reader clearly states what it can handle, and the contract is consistent. Clients can safely substitute any `FileReader` subclass because they all follow the same contract pattern.
 
 ### Real-World LSP: Database Connections
 
