@@ -221,6 +221,7 @@ Stack:
 **Step 4: Functions finish (trays removed from top)**
 Each function finishes and its "tray" gets removed from the top, until only the main function remains.
 
+```
 Step 2: formatGreeting() called
 ┌─────────────────────┐
 │ formatGreeting()    │

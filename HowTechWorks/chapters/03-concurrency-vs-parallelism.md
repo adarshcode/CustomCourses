@@ -196,7 +196,11 @@ While you're playing a game:
 - **Core 3** runs the AI for computer-controlled characters
 - **Core 4** processes sound effects and music
 
-Each core has a completely different job, but they all work together simultaneously.  
+Each core has a completely different job, but they all work together simultaneously.
+
+```
+Core 1: Graphics Rendering
+Core 2: Physics Calculations  
 Core 3: AI Decision Making
 Core 4: Audio Processing
 All running simultaneously for the same game
