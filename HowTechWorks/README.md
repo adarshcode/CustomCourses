@@ -98,11 +98,6 @@ This course is designed to build your understanding **gradually** - starting wit
 3. Try the examples to see concepts in action
 4. Return to earlier chapters when advanced topics reference foundational concepts
 
-**Time Investment**: 
-- Each chapter: 45-60 minutes of focused reading
-- Complete course: 9-11 hours spread over multiple sessions
-- Recommended pace: 1-2 chapters per day for deep understanding
-
 ---
 
 ## 💡 What Makes This Course Different
@@ -143,3 +138,4 @@ By completing this course, you will understand:
 
 
 **[Start with Chapter 1: What Happens When You Run a Program? →](./chapters/01-what-happens-when-you-run-a-program.md)**
+
